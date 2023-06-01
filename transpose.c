@@ -42,3 +42,20 @@ void transpose(int** matrix, int rows, int columns) {
     }
     free(temp);
 }
+
+void inverse(float** matrix, int rows, int columns) {
+    if(columns != rows) {
+        printf("Error! Matrix is not square and cannot be inversed!\n");
+        return;
+    }
+    
+    if(rows > 4) {
+        printf("Error! Matrix size cannot exceed 4x4!\n");
+        return;
+    }
+    
+    if(rows == 3) {
+        float** matrixOfMinors = (float**)malloc(sizeof(float*));
+        //for(int i = 0; i < rows
+    }
+}
