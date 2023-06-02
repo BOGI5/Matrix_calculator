@@ -82,7 +82,7 @@ void inverseOfAMatrix(float** matrix, int rows, int columns) {
                     currentRowIndex++;
                 }
 
-                matrixOfMinors[i][j] = determinantOfAMatrix(temp, rows - 1, columns - 1);
+                matrixOfMinors[i][j] = /*determinantOfAMatrix(temp, rows - 1, columns - 1)*/ 69;
                 freeMatrix(temp, rows - 1);
             }
         }
@@ -91,8 +91,26 @@ void inverseOfAMatrix(float** matrix, int rows, int columns) {
         
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
-                temp[i][j] = matrix[i][j];
+                matrixOfCofactors[i][j] = matrixOfMinors[i][j];
             }
         }
+        
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                if(i % 2 == 0 && j % 2 == 1 || i % 2 == 1 && j % 2 == 0) {
+                    matrixOfCofactors[i][j] *= -1;
+                }
+            }
+        }
+        
+        float** adjugate = allocateMatrix(rows, columns);
+        
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                adjugate[i][j] = matrixOfCofactors[i][j];
+            }
+        }
+        
+        transpose(adjugate, rows, columns);
     }
 }
