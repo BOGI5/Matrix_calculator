@@ -3,13 +3,6 @@
 
 #include "transpose.h"
 
-// void allocateMatrix(float** matrix, int rows, int columns) {
-//     matrix = (float**)malloc(rows * sizeof(float*));
-//     for(int i = 0; i < rows; i++) {
-//         matrix[i] = (float*)malloc(columns * sizeof(float));
-//     }
-// }
-
 // private function for matrix memory allocation to prevent code repetition
 float** allocateMatrix(int rows, int columns) {
     float** matrix = (float**)malloc(rows * sizeof(float*));
@@ -25,6 +18,7 @@ void freeMatrix(float** matrix, int rows) {
         free(matrix[i]);
     }
     free(matrix);
+    matrix = NULL;
 }
 
 void transpose(float** matrix, int rows, int columns) {
@@ -89,6 +83,7 @@ void inverseOfAMatrix(float** matrix, int rows, int columns) {
                 }
 
                 matrixOfMinors[i][j] = determinantOfAMatrix(temp, rows - 1, columns - 1);
+                freeMatrix(temp, rows - 1);
             }
         }
     }
