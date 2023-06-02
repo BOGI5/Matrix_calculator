@@ -86,5 +86,13 @@ void inverseOfAMatrix(float** matrix, int rows, int columns) {
                 freeMatrix(temp, rows - 1);
             }
         }
+        
+        float** matrixOfCofactors = allocateMatrix(rows, columns);
+        
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                temp[i][j] = matrix[i][j];
+            }
+        }
     }
 }
