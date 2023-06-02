@@ -13,12 +13,12 @@ float** allocateMatrix(int rows, int columns) {
 }
 
 // private function for freeing matrix memory to prevent code repetition
-void freeMatrix(float** matrix, int rows) {
+void freeMatrix(float*** matrix, int rows) {
     for(int i = 0; i < rows; i++) {
-        free(matrix[i]);
+        free(*(matrix[i]));
     }
-    free(matrix);
-    matrix = NULL;
+    free(*matrix);
+    *matrix = NULL;
 }
 
 void transpose(float** matrix, int rows, int columns) {
