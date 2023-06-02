@@ -21,6 +21,34 @@ void freeMatrix(float*** matrix, int rows) {
     *matrix = NULL;
 }
 
+// private function that generates an identity matrix
+float** identityMatrix(int size) {
+    // creates a new array
+    float** identityMatrix = allocateMatrix(size, size);
+    
+    // filled with zeros
+    for(int i = 0; i < size; i++) {
+        for(int j = 0; j < size; j++) {
+            identityMatrix[i][j] = 0;
+        }
+    }
+    
+    // and ones on the diagonal
+    for(int i = 0; i < size; i++) {
+        identityMatrix[i][i] = 1;
+    }
+    
+    return identityMatrix;
+}
+
+// private function that checks if a matrix is invertible - if the original matrix multiplied by the temporary inverse matrix and vice versa is equal to the identity matrix 
+int isInvertible(float** matrixA, float** matrixB, int size) {
+    if(umnojenieSMatrica(matrixA, size, size, matrixB) == umnojenieSMatrica(matrixB, size, size, matrixA) == identityMatrix(size) && determinant(matrixA) != 0) {
+        return 1;
+    }
+    return 0;
+}
+
 void transpose(float*** matrix, int rows, int columns) {
     // creating a temp copy of the matrix to work with
     float** temp = allocateMatrix(rows, columns);
@@ -82,7 +110,7 @@ void inverse(float*** matrix, int rows, int columns) {
                     currentRowIndex++;
                 }
 
-                inverse[i][j] = /*determinantOfAMatrix(temp, rows - 1, columns - 1)*/ 1;
+                inverse[i][j] = /*determinant(temp, rows - 1, columns - 1)*/ 1;
                 freeMatrix(temp, rows - 1);
             }
         }
@@ -97,7 +125,13 @@ void inverse(float*** matrix, int rows, int columns) {
         
         transpose(inverse, rows, columns);
         
-        //umnojeniePoSkalar(inverse, rows, columns, 1 / determinantOfAMatrix(*matrix, rows, columns));
+        //umnojeniePoSkalar(inverse, rows, columns, 1 / determinant(*matrix, rows, columns));
+        
+        if(isInvertible(*matrix, inverse, size) == 0) {
+           printf("Error! Matrix is not invertible\n");
+           return;
+        }
+        
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
                 (*matrix)[i][j] = inverse[i][j];
