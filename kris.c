@@ -108,64 +108,60 @@ float** invert(float** matrix, int rows, int columns) {
         return NULL;
     }
     
-    if(rows == 3) {
-        // algorithm: https://www.mathsisfun.com/algebra/matrix-inverse-minors-cofactors-adjugate.html
-        float** inverseMatrix = allocateMatrix(rows, columns);
+    // algorithm: https://www.mathsisfun.com/algebra/matrix-inverse-minors-cofactors-adjugate.html
+    float** inverseMatrix = allocateMatrix(rows, columns);
 
-        // creates a matrix of minors - each member is determinant of the rest that are not in the same row and column
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < columns; j++) {
-                float** temp = allocateMatrix(rows - 1, columns - 1);
+    // creates a matrix of minors - each member is determinant of the rest that are not in the same row and column
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < columns; j++) {
+            float** temp = allocateMatrix(rows - 1, columns - 1);
                 
-                for(int k = 0, currentRowIndex = 0; k < rows; k++) {
-                    if(k == i) {
+            for(int k = 0, currentRowIndex = 0; k < rows; k++) {
+                if(k == i) {
+                    continue;
+                }
+
+                for(int l = 0, currentColumnIndex = 0; l < columns; l++) {
+                    if(l == j) {
                         continue;
                     }
 
-                    for(int l = 0, currentColumnIndex = 0; l < columns; l++) {
-                        if(l == j) {
-                            continue;
-                        }
-
-                        temp[currentRowIndex][currentColumnIndex++] = matrix[k][l];
-                    }
-                    currentRowIndex++;
+                    temp[currentRowIndex][currentColumnIndex++] = matrix[k][l];
                 }
+                currentRowIndex++;
+            }
 
-                inverseMatrix[i][j] = /*determinantOf(temp, rows - 1, columns - 1)*/ 1;
-                deallocateMatrix(temp, rows - 1);
-            }
+            inverseMatrix[i][j] = /*determinantOf(temp, rows - 1, columns - 1)*/ 1;
+            deallocateMatrix(temp, rows - 1);
         }
-        
-        // the matrix of minors is turned into matrix of cofactors by applying this pattern:
-        // + - + -
-        // - + - +
-        // + - + -
-        // - + - +
-        // to it
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < columns; j++) {
-                if(i % 2 == 0 && j % 2 == 1 || i % 2 == 1 && j % 2 == 0) {
-                    inverseMatrix[i][j] *= -1;
-                }
-            }
-        }
-        
-        // then the matrix is transposed
-        transpose(inverseMatrix, rows, columns);
-        
-        // and lastly the matrix is multiplied by the determinant of the original matrix
-        //multiplyByScalar(inverseMatrix, rows, columns, 1 / determinantOf(matrix, rows, columns));
-        
-        // checks if the matrix is invertible because not all square matrices are invertible
-        if(isInvertible(matrix, inverseMatrix, rows) == 0) {
-            printf("Error! Matrix is not invertible\n");
-            deallocateMatrix(inverseMatrix, rows);
-            return NULL;
-        }
-        
-        return inverseMatrix;
     }
-
-    return NULL;
+        
+    // the matrix of minors is turned into matrix of cofactors by applying this pattern:
+    // + - + -
+    // - + - +
+    // + - + -
+    // - + - +
+    // to it
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < columns; j++) {
+            if(i % 2 == 0 && j % 2 == 1 || i % 2 == 1 && j % 2 == 0) {
+                inverseMatrix[i][j] *= -1;
+            }
+        }
+    }
+        
+    // then the matrix is transposed
+    transpose(inverseMatrix, rows, columns);
+        
+    // and lastly the matrix is multiplied by the determinant of the original matrix
+    //multiplyByScalar(inverseMatrix, rows, columns, 1 / determinantOf(matrix, rows, columns));
+        
+    // checks if the matrix is invertible because not all square matrices are invertible
+    if(isInvertible(matrix, inverseMatrix, rows) == 0) {
+        printf("Error! Matrix is not invertible\n");
+        deallocateMatrix(inverseMatrix, rows);
+        return NULL;
+    }
+        
+    return inverseMatrix;
 }
