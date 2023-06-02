@@ -69,6 +69,10 @@ int isInvertible(float** matrixA, float** matrixB, int size) {
 
 // function that returns a matrix divided by a scalar
 float** divideByScalar(float** matrix, int rows, int columns, float scalar) {
+    if(scalar == 0) {
+        printf("Error! You cannot divide by zero!\n");
+        return NULL;
+    }
     float** dividedMatrix = allocateMatrix(rows, columns);
 
     for(int i = 0; i < rows; i++) {
