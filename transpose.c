@@ -49,7 +49,7 @@ void transpose(float*** matrix, int rows, int columns) {
     freeMatrix(temp, rows);
 }
 
-void inverseOfAMatrix(float** matrix, int rows, int columns) {
+void inverse(float*** matrix, int rows, int columns) {
     if(columns != rows) {
         printf("Error! Matrix is not square and cannot be inversed!\n");
         return;
@@ -61,7 +61,7 @@ void inverseOfAMatrix(float** matrix, int rows, int columns) {
     }
     
     if(rows == 3) {
-        float** matrixOfMinors = allocateMatrix(rows, columns);
+        float** inverse = allocateMatrix(rows, columns);
 
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
@@ -77,40 +77,32 @@ void inverseOfAMatrix(float** matrix, int rows, int columns) {
                             continue;
                         }
 
-                        temp[currentRowIndex][currentColumnIndex++] = matrix[k][l];
+                        temp[currentRowIndex][currentColumnIndex++] = (*matrix)[k][l];
                     }
                     currentRowIndex++;
                 }
 
-                matrixOfMinors[i][j] = /*determinantOfAMatrix(temp, rows - 1, columns - 1)*/ 69;
+                inverse[i][j] = /*determinantOfAMatrix(temp, rows - 1, columns - 1)*/ 1;
                 freeMatrix(temp, rows - 1);
-            }
-        }
-        
-        float** matrixOfCofactors = allocateMatrix(rows, columns);
-        
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < columns; j++) {
-                matrixOfCofactors[i][j] = matrixOfMinors[i][j];
             }
         }
         
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
                 if(i % 2 == 0 && j % 2 == 1 || i % 2 == 1 && j % 2 == 0) {
-                    matrixOfCofactors[i][j] *= -1;
+                    inverse[i][j] *= -1;
                 }
             }
         }
         
-        float** adjugate = allocateMatrix(rows, columns);
+        transpose(inverse, rows, columns);
         
+        //umnojeniePoSkalar(inverse, rows, columns, 1 / determinantOfAMatrix(*matrix, rows, columns));
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
-                adjugate[i][j] = matrixOfCofactors[i][j];
+                (*matrix)[i][j] = inverse[i][j];
             }
         }
-        
-        transpose(adjugate, rows, columns);
+        freeMatrix(inverse, rows);
     }
 }
