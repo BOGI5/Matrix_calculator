@@ -21,27 +21,27 @@ void freeMatrix(float*** matrix, int rows) {
     *matrix = NULL;
 }
 
-void transpose(float** matrix, int rows, int columns) {
+void transpose(float*** matrix, int rows, int columns) {
     // creating a temp copy of the matrix to work with
     float** temp = allocateMatrix(rows, columns);
 
     // copying the contents of the matrix
     for(int i = 0; i < rows; i++) {
         for(int j = 0; j < columns; j++) {
-            temp[i][j] = matrix[i][j];
+            temp[i][j] = (*matrix)[i][j];
         }
     }
 
     // free the memory of the original matrix
-    freeMatrix(matrix, rows);
+    freeMatrix(*matrix, rows);
 
     // allocationg memory for the matrix but with switched rows and columns
-    temp = allocateMatrix(columns, rows);
+    *matrix = allocateMatrix(columns, rows);
 
     // transpose the numbers from temp into matrix
     for(int i = 0; i < columns; i++) {
         for(int j = 0; j < rows; j++) {
-            matrix[i][j] = temp[j][i];
+            (*matrix)[i][j] = temp[j][i];
         }
     }
 
