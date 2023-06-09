@@ -169,3 +169,12 @@ float** invert(float** matrix, int rows, int columns) {
         
     return inverseMatrix;
 }
+
+void printMatrix(float** matrix, int rows, int columns) {
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < columns; j++) {
+            printf("%f ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
