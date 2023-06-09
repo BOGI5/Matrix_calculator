@@ -14,6 +14,7 @@ float** transpose(float** matrix, int rows, int columns);
 
 float** invert(float** matrix, int rows, int columns);
 
+void printMatrix(float** matrix, int rows, int columns);
 
 /* funkcii na joro
 
