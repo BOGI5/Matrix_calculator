@@ -2,12 +2,27 @@
 #include <stdlib.h>
 
 #include "kris.h"
+#include "georgi.h"
 
 // private function for matrix memory allocation to prevent code repetition
 float** allocateMatrix(int rows, int columns) {
     float** matrix = (float**)malloc(rows * sizeof(float*));
+    if(matrix == NULL){
+        printf("Memory allocation error!\n");
+        return NULL;
+    }
+
     for(int i = 0; i < rows; i++) {
         matrix[i] = (float*)malloc(columns * sizeof(float));
+        if(matrix[i] == NULL){
+            printf("Memory allocation error!\n");
+
+            for(int j = 0; j < i; j++){
+                free(matrix[j]);
+            }
+            free(matrix);
+            return NULL;
+        }
     }
     return matrix;
 }
@@ -56,11 +71,11 @@ int compareMatrices(float** matrix1, float** matrix2, int size) {
 
 // private function that checks if a matrix is invertible 
 int isInvertible(float** matrixA, float** matrixB, int size) {
-    float** result1 = multiplyByMatrix(matrixA, matrixB, size, size, size);
-    float** result2 = multiplyByMatrix(matrixB, matrixA, size, size, size);
+    float** result1 = matrices_multiplication(matrixA, size, size, matrixB, size, size);
+    float** result2 = matrices_multiplication(matrixB, size, size, matrixA, size, size);
 
     // if the original matrix multiplied by the temporary inverse matrix and vice versa is equal to the identity matrix and the determinant of the original matrix is not 0 it is invertible
-    if(compareMatrices(result1, result2, size) == 1 && determinantOf(matrixA, size, size) != 0) {
+    if(compareMatrices(result1, result2, size) == 1 && matrix_determinant(matrixA, size, size) != 0.0) {
         return 1;
     }
 
@@ -107,8 +122,8 @@ float** invert(float** matrix, int rows, int columns) {
         return NULL;
     }
     
-    if(rows < 2 || rows > 4) {
-        printf("Error! Matrix size must be between 2x2 and 4x4!\n");
+    if(rows < 2 || rows > 3) {
+        printf("Error! Matrix size must not exceed 3x3!\n");
         return NULL;
     }
     
@@ -135,7 +150,7 @@ float** invert(float** matrix, int rows, int columns) {
                 currentRowIndex++;
             }
 
-            inverseMatrix[i][j] = /*determinantOf(temp, rows - 1, columns - 1)*/ 1;
+            inverseMatrix[i][j] = matrix_determinant(temp, rows - 1, columns - 1);
             deallocateMatrix(temp, rows - 1);
         }
     }
@@ -155,10 +170,10 @@ float** invert(float** matrix, int rows, int columns) {
     }
         
     // then the matrix is transposed
-    transpose(inverseMatrix, rows, columns);
+    inverseMatrix = transpose(inverseMatrix, rows, columns);
         
     // and lastly the matrix is multiplied by the determinant of the original matrix
-    //multiplyByScalar(inverseMatrix, rows, columns, 1 / determinantOf(matrix, rows, columns));
+    matrix_scalar_multiplication(inverseMatrix, rows, columns, 1 / matrix_determinant(matrix, rows, columns));
         
     // checks if the matrix is invertible because not all square matrices are invertible
     if(isInvertible(matrix, inverseMatrix, rows) == 0) {
