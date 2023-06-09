@@ -15,14 +15,3 @@ float** transpose(float** matrix, int rows, int columns);
 float** invert(float** matrix, int rows, int columns);
 
 void printMatrix(float** matrix, int rows, int columns);
-
-/* funkcii na joro
-
-
-float** multiplyByScalar(float** matrix, int rows, int columns, float scalar);
-
-float** multiplyByMatrix(float** matrix1, float** matrix2, int rows1, int columns1rows2, int columns2);
-
-float determinantOf(float** matrix, int rows, int columns);
-
-*/
